@@ -13,6 +13,7 @@ import SwiftUI
     private var apiNetwork: ApiNetwork? = nil
     var isLoading: Bool = false
     var arucoDontFound: Bool = false
+    var showAlert: Bool = false
     
     var selectedItem: PhotosPickerItem? {
         didSet {
@@ -35,6 +36,10 @@ import SwiftUI
         }
     }
     
+    func onChangeShowAlert(){
+        showAlert = false
+    }
+    
     func onSendImage() async {
         isLoading = true
         let data: Data? = prepareImageForUpload()
@@ -54,10 +59,10 @@ import SwiftUI
             case .arucoDontFound:
                 arucoDontFound = true
             case .serverError:
-                print("Server error")
+                showAlert = true
             }
         } catch {
-            print("error")
+            showAlert = true
         }
         isLoading = false
        

@@ -74,7 +74,7 @@ struct ContentView: View {
             
             Spacer()
         }.frame(maxHeight: .infinity)
-        .padding().background(Color(.surface))
+            .padding().background(Color(.surface)).alert("Error del servidor", isPresented: $vm.showAlert, actions: {Button(action: {vm.onChangeShowAlert()}, label: {Text("Ok")})})
     }
 }
 
