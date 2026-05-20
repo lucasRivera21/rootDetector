@@ -42,7 +42,16 @@ struct ContentView: View {
                     }
                 }
                 
-            }.frame(maxWidth: .infinity, maxHeight: 212).overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(.primary), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [2, 3])))
+            }.frame(maxWidth: .infinity, maxHeight: 212).overlay(RoundedRectangle(cornerRadius: 12).stroke(Color(vm.arucoDontFound ? .error : .primary), style: StrokeStyle(lineWidth: 1, lineCap: .round, dash: [2, 3])))
+            
+            
+            if(vm.arucoDontFound){
+                VStack(alignment: HorizontalAlignment.leading) {
+                   
+                   Text("Aruco no encontrado").foregroundStyle(Color(.error)).font(.system(size: 12))
+                   
+               }.frame(maxWidth: .infinity, alignment: .leading)
+            }
             
             ZStack{
                 

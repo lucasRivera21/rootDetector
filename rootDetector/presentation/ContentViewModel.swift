@@ -12,10 +12,12 @@ import SwiftUI
 @Observable class ContentViewModel {
     private var apiNetwork: ApiNetwork? = nil
     var isLoading: Bool = false
+    var arucoDontFound: Bool = false
     
     var selectedItem: PhotosPickerItem? {
         didSet {
             Task {
+                arucoDontFound = false
                 await onUploadImage()
             }
         }
@@ -46,7 +48,14 @@ import SwiftUI
         
         do{
             let result = try await apiNetwork!.postImage(data!)
-            print("result: \(result)")
+            switch result {
+            case .success:
+                print("success")
+            case .arucoDontFound:
+                arucoDontFound = true
+            case .serverError:
+                print("Server error")
+            }
         } catch {
             print("error")
         }
