@@ -10,6 +10,9 @@ import PhotosUI
 import SwiftUI
 
 @Observable class ContentViewModel {
+    private var apiNetwork: ApiNetwork? = nil
+    var isLoading: Bool = false
+    
     var selectedItem: PhotosPickerItem? {
         didSet {
             Task {
@@ -28,5 +31,30 @@ import SwiftUI
                 self.selectedImage = uiImage
             }
         }
+    }
+    
+    func onSendImage() async {
+        isLoading = true
+        let data: Data? = prepareImageForUpload()
+        if(data == nil){
+            return
+        }
+        
+        if(apiNetwork == nil){
+            apiNetwork = ApiNetwork()
+        }
+        
+        do{
+            let result = try await apiNetwork!.postImage(data!)
+            print("result: \(result)")
+        } catch {
+            print("error")
+        }
+        isLoading = false
+       
+    }
+    
+    private func prepareImageForUpload() -> Data? {
+        return self.selectedImage?.jpegData(compressionQuality: 0.7)
     }
 }

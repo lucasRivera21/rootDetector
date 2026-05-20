@@ -48,8 +48,17 @@ struct ContentView: View {
                 
             }.frame(height: 32)
             
-            Button(action: {}){
-                Text("Comenzar").font(.system(size: 16, weight: Font.Weight.semibold))
+            Button(action: {
+                Task{
+                    await vm.onSendImage()
+                }
+            }){
+                if(vm.isLoading){
+                    ProgressView()
+                } else {
+                    Text("Comenzar").font(.system(size: 16, weight: Font.Weight.semibold))
+                }
+                
             }.padding().frame(maxWidth: .infinity).background(vm.selectedImage != nil ? Color(.primary) : Color(.onSurface).opacity(0.1)).foregroundStyle(Color(vm.selectedItem != nil ? .onPrimary : .onSurface)).cornerRadius(12)
             
             
