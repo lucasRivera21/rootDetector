@@ -14,6 +14,7 @@ import SwiftUI
     var isLoading: Bool = false
     var arucoDontFound: Bool = false
     var showAlert: Bool = false
+    var rootDetectedModel: RootDetectedModel?
     
     var selectedItem: PhotosPickerItem? {
         didSet {
@@ -42,8 +43,11 @@ import SwiftUI
     
     func onSendImage() async {
         isLoading = true
+        rootDetectedModel = nil
+        
         let data: Data? = prepareImageForUpload()
         if(data == nil){
+            isLoading = false
             return
         }
         
@@ -52,14 +56,16 @@ import SwiftUI
         }
         
         do{
-            let result = try await apiNetwork!.postImage(data!)
-            switch result {
-            case .success:
-                print("success")
-            case .arucoDontFound:
-                arucoDontFound = true
-            case .serverError:
-                showAlert = true
+            if let networkService = apiNetwork{
+                let result = try await networkService.postImage(data!)
+                switch result {
+                case .success(let dto):
+                    self.rootDetectedModel = RootDetectedModel(from: dto)
+                case .arucoDontFound:
+                    arucoDontFound = true
+                case .serverError:
+                    showAlert = true
+                }
             }
         } catch {
             showAlert = true
